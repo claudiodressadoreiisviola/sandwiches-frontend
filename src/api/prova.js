@@ -50,3 +50,21 @@ export function getArchiveOffer(){
   .get("https://paninara.claudiodressadore.net/evomatic/API/offer/getArchiveOffer.php")
   .then(res=>res.data)
 }
+
+export function createProduct(name, price, description, quantity, ingredients, tags, category, nutritional_values) {
+  return axios
+    .post(
+      "https://paninara.claudiodressadore.net/evomatic/API/product/createProduct.php",
+      {
+        "name": name,
+        "price": price,
+        "description": description,
+        "quantity": quantity,
+        "ingredients": ingredients,
+        "tags": tags,
+        "category": category,
+        "nutritional_values": nutritional_values
+      }
+    )
+    .then((response) => response.status)
+}

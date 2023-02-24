@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "../App.css";
 import { ScrollView, View, Text } from "react-native";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { getIngredient } from "../api/prova";
+import { getIngredient, createProduct } from "../api/prova.js";
 
 const categories = ["Panini", "Piadine", "Bevande"]; //API QUI
 
@@ -19,8 +19,8 @@ const ingredients = [
 
 function NewProduct() {
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
   const [category, setCategory] = useState(categories[0]);
   const [ingredient, setIngredient] = useState(ingredients[0]);
   const [quantity, setQuantity] = useState(0);
@@ -36,7 +36,20 @@ function NewProduct() {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    // Metto i nutritional_values in un array, come richiesto dall'api nel backend
+    let nutritional_values = [kcal, fat, saturedFat, carbohydrate, sugar, protein, fiber, salt]
+
+    // Invoco la funzione in test.js e ne catturo il codice di ritorno
+    let status = createProduct(name, price, description, quantity, ingredients, tags, category, nutritional_values)
+
+    // Stampo in console se il prodotto è stato caricato o meno
+    if (status == 200) {
+      console.log("Prodotto aggiunto con successo!")
+    }
+    else
+    {
+      console.log(`Errore nell'aggiunta del prodotto: codice di stato ${status}`)
+    }
   };
 
   const handleNameChange = (event) => {
@@ -69,7 +82,7 @@ function NewProduct() {
   };
 
   const handleQuantityChange = (event) => {
-    setQuantity(parseInt(event.target.value));
+    setQuantity(event.target.value)
   };
 
   const handleQuantityIncrement = () => {
@@ -88,7 +101,7 @@ function NewProduct() {
     }
   };
 
-  const handleKclaChange = (event) => {
+  const handleKcalChange = (event) => {
     setKcal(parseInt(event.target.value));
   };
   const handleFatChange = (event) => {
@@ -246,7 +259,7 @@ function NewProduct() {
                     type="number"
                     min="0"
                     value={kcal}
-                    onChange={handleKclaChange}
+                    onChange={handleKcalChange}
                   />
                 </label>
 
